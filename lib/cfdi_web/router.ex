@@ -17,6 +17,7 @@ defmodule CfdiWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    post "/", PageController, :xml
   end
 
   # Other scopes may use custom stacks.
