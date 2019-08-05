@@ -39,7 +39,8 @@ defmodule Cfdi.MixProject do
       {:gettext,                    "~> 0.11"},
       {:jason,                      "~> 1.0"},
       {:plug_cowboy,                "~> 2.0"},
-      {:sweet_xml,                  "~> 0.6.5"}
+      {:sweet_xml,                  "~> 0.6.5"},
+      {:elixlsx,                    "~> 0.4.2"}
     ]
   end
 end
