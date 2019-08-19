@@ -1,10 +1,15 @@
 defmodule Cfdi.Helpers.Xml do
 
+  import SweetXml
+
   alias Cfdi.Helpers.Xlsx
+
+  @main "//cfdi:Comprobante"
 
   def parse_xml([head], acc) do
     with {:ok, xmldoc} <- File.read(Path.expand("#{head.path}")) do
-      Xlsx.generate([xmldoc] ++ acc)
+      IO.inspect function_name(xmldoc)
+      # Xlsx.generate([xmldoc] ++ acc)
     else
       {:error, error} ->
         {:error, "#{head.filename}"}
@@ -17,5 +22,15 @@ defmodule Cfdi.Helpers.Xml do
       {:error, error} ->
         {:error, "#{head.filename}"}
     end
+  end
+
+  def function_name(xml) do
+    date = xpath(xml, ~x"#{@main}/@Fecha")
+    uuid = xpath(xml, ~x"#{@main}/cfdi:Complemento/tfd:TimbreFiscalDigital/@UUID")
+
+    %{
+      date: date,
+      uuid: uuid
+    }
   end
 end
