@@ -12,6 +12,8 @@ defmodule CfdiWeb.PageController do
   def xml(conn, %{"for" => files} = params) do
     case Xml.parse_xml(files, []) do
       {:ok, xlsx} ->
+        File.rm("hello.xlsx")
+
         conn
         |> put_resp_content_type("text/xlsx")
         |> put_resp_header("content-disposition", "attachment; filename=\"hello.xlsx\"")
