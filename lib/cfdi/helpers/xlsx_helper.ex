@@ -8,6 +8,7 @@ defmodule Cfdi.Helpers.Xlsx do
     {"B3", "F3"}
   ]
 
+  @spec generate(list) :: tuple
   def generate(data) do
     %Sheet{
       name: "Merged Cells",
@@ -21,7 +22,7 @@ defmodule Cfdi.Helpers.Xlsx do
     File.read("hello.xlsx")
   end
 
-  # @spec _set_header(Sheet.t) :: Sheet.t
+  @spec _set_header(Sheet.t, map) :: Sheet.t
   defp _set_header(sheet, data) do
     sheet
     |> Sheet.set_cell("B2", List.first(data).receiver, bold: true, size: 14)
@@ -47,26 +48,27 @@ defmodule Cfdi.Helpers.Xlsx do
     |> Sheet.set_row_height(3, 25)
   end
 
-  defp _set_body(sheet, [head], row) do
-    _body_cells(sheet, head, row)
-  end
+  @spec _set_body(Sheet.t, list, integer) :: Sheet.t
+  defp _set_body(sheet, [head], row), do: _body_cells(sheet, head, row)
   defp _set_body(sheet, [head | tail], row) do
     sheet
     |> _body_cells(head, row)
     |> _set_body(tail, row ++ 1)
   end
 
+  @spec _body_cells(Sheet.t, map, integer) :: Sheet.t
   defp _body_cells(sheet, data, row)  do
     sheet
     |> Sheet.set_cell("A#{row}", data.date)
     |> Sheet.set_cell("B#{row}", data.concept)
     |> Sheet.set_cell("C#{row}", data.invoice)
     |> Sheet.set_cell("D#{row}", data.subtotal)
-    |> Sheet.set_cell("E#{row}", "IEPS")
-    |> Sheet.set_cell("F#{row}", data.iva)
+    |> Sheet.set_cell("E#{row}", Map.get(data.taxes, :ieps))
+    |> Sheet.set_cell("F#{row}", Map.get(data.taxes, :iva))
     |> Sheet.set_cell("G#{row}", data.total)
+    |> Sheet.set_cell("H#{row}", data.type)
     |> Sheet.set_cell("J#{row}", data.description)
-    |> Sheet.set_cell("K#{row}", "FORMA DE PAGO")
+    |> Sheet.set_cell("K#{row}", data.payment_method)
     |> Sheet.set_cell("L#{row}", data.uuid)
   end
 end
