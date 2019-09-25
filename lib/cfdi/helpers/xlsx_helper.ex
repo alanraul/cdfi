@@ -15,7 +15,7 @@ defmodule Cfdi.Helpers.Xlsx do
       merge_cells: @merge_cells
     }
     |> _set_header(data)
-    |> _set_body(data, 7)
+    |> _set_row(data, 7)
     |> (&(Workbook.append_sheet(%Workbook{}, &1))).()
     |> Elixlsx.write_to("hello.xlsx")
 
@@ -48,12 +48,12 @@ defmodule Cfdi.Helpers.Xlsx do
     |> Sheet.set_row_height(3, 25)
   end
 
-  @spec _set_body(Sheet.t, list, integer) :: Sheet.t
-  defp _set_body(sheet, [head], row), do: _body_cells(sheet, head, row)
-  defp _set_body(sheet, [head | tail], row) do
+  @spec _set_row(Sheet.t, list, integer) :: Sheet.t
+  defp _set_row(sheet, [head], row), do: _body_cells(sheet, head, row)
+  defp _set_row(sheet, [head | tail], row) do
     sheet
     |> _body_cells(head, row)
-    |> _set_body(tail, row ++ 1)
+    |> _set_row(tail, row + 1)
   end
 
   @spec _body_cells(Sheet.t, map, integer) :: Sheet.t

@@ -17,7 +17,7 @@ defmodule Cfdi.Helpers.Xml do
   end
   def parse_xml([head | tail], acc) do
     with {:ok, xmldoc} <- File.read(Path.expand("#{head.path}")) do
-      parse_xml([tail], [_get_data(xmldoc)] ++ acc)
+      parse_xml(tail, [_get_data(xmldoc)] ++ acc)
     else
       {:error, error} ->
         {:error, "#{head.filename}"}
